@@ -3,9 +3,10 @@ package SWE_Login_AddStaff_Module;
 import java.util.ArrayList;
 
 /**
- * @author ChrisGoodman, James Johnson, Dennis Smith, Ben Boaz
+ * @author ChrisGoodman, James Johnson, Dennis Smith, Ben Boaz, Sherry Wang
  * @since 03/16/2015
  */
+
 public class AdminStaffController
 {
     ArrayList<Staff> staffList; //Will hold a list of all Staff Members
@@ -31,7 +32,7 @@ public class AdminStaffController
     }
     
     /****************************************************************************
-     * 
+     * send Staff member data within the ArrayList of staff to the DataStore
      * @param ArrayList of staff  
      */
     public void uploadStaffData(ArrayList<Staff> st)
