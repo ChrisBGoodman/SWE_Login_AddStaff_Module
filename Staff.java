@@ -14,13 +14,11 @@ public class Staff
     String userName;
     String passWord;
     
-    Staff(String name, String position, String email, String userName, String passWord)
+    Staff(String name, String position, String email)
     {
         this.name = name;
         this.position = position;
         this.email = email;
-        this.userName = userName;
-        this.passWord = passWord;
     }
     
 }
