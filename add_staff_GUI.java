@@ -28,7 +28,7 @@ import java.awt.LayoutManager;
 import static java.util.Collections.list;
 
 /**
- * @author James
+ * @author James, Christian
  *
  */
 public class add_staff_GUI extends JFrame {
@@ -37,7 +37,6 @@ public class add_staff_GUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Panel staff_GUI;
-	
 	private ImageIcon image1;
 	private JLabel label1;
 	private JPanel panel;
@@ -47,12 +46,13 @@ public class add_staff_GUI extends JFrame {
 
         private ArrayList<String> list; //Will hold a list of all Staff Members. Values will be returned as a string
        
-	protected JComponent makeTextPanel(String text) {
-	JPanel panel = new JPanel(false);
-	JLabel filler = new JLabel(text);
-	panel.setLayout(new GridLayout(1, 1));
-	panel.add(filler);
-	return panel;
+	protected JComponent makeTextPanel(String text) 
+        {
+            JPanel panel = new JPanel(false);
+            JLabel filler = new JLabel(text);
+            panel.setLayout(new GridLayout(1, 1));
+            panel.add(filler);
+            return panel;
 	}
         
         add_staff_GUI() 
@@ -127,7 +127,7 @@ public class add_staff_GUI extends JFrame {
         
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
-		} //End Constructor
+            } //End Constructor
 
 	public static void main(String[] args) 
         {
