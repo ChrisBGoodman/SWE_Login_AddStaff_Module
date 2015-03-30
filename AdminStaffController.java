@@ -1,11 +1,18 @@
 package SWE_Login_AddStaff_Module;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  * @author ChrisGoodman, James Johnson, Dennis Smith, Ben Boaz, Sherry Wang
@@ -39,6 +46,37 @@ public class AdminStaffController
     {
         //code to call and load staffFormGUI
     }
+    //---------------------------------------------------------------------------
+    public void uploadStaffDataExcel()
+    {
+        String filePath, extensionType = null;
+        
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.showOpenDialog(null);
+        
+        
+        
+        try
+        {
+            Scanner sc = new Scanner(fc.getSelectedFile());
+            File selectedFile = fc.getSelectedFile();
+            filePath = selectedFile.getAbsolutePath();
+            extensionType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
+
+
+        } catch (FileNotFoundException ex){
+            Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);}
+       
+        
+        
+        
+        
+        
+        
+        
+        
+    }
     
     /****************************************************************************
      * send Staff member data within the ArrayList of staff to the DataStore
@@ -57,6 +95,7 @@ public class AdminStaffController
         email = "bdiaz1@cub.uca.edu";
         username = "bdiaz1";
         password = "123456";
+        int user_type = 1;
 
         conn = DriverManager.getConnection("jdbc:mysql://" + host
                                 + "/" + database + "?"
@@ -71,6 +110,11 @@ public class AdminStaffController
                 + email     + "','" 
                 + username  + "','" 
                 + password  + "')");
+        
+        st.executeUpdate("INSERT into User " + "VALUES('"
+                + username + "','"
+                + password + "','"
+                + user_type+ "','");
         
         conn.close();
     }
@@ -133,10 +177,15 @@ public class AdminStaffController
     public static void main(String[] args) throws SQLException
     {
         AdminStaffController asc = new AdminStaffController();
-        asc.getStaffList();
-        asc.displayStaffList();
+        //asc.getStaffList();
+        //asc.displayStaffList();
         //asc.uploadStaffData(null, null, null, null, null, null);
         //asc.displayStaffList();
+        //asc.uploadStaffDataExcel();
+        String x = "cgoodman1";
+        String y = "475977";
+        LoginController lc = new LoginController(x,y);
+        System.out.println();
     }
 }
 
