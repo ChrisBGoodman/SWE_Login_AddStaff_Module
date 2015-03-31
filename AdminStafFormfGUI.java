@@ -5,7 +5,7 @@ package SWE_Login_AddStaff_Module;
  * @since 03/16/2015
  */
 
-public class AdminStaffGUI
+public class AdminStafFormfGUI
 {
     
 }

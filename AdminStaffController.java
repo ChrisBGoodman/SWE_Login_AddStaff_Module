@@ -1,8 +1,11 @@
 package SWE_Login_AddStaff_Module;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,27 +16,26 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * @author ChrisGoodman, James Johnson, Dennis Smith, Ben Boaz, Sherry Wang
+ * @author ChrisGoodman
  * @since 03/16/2015
  */
 
-public class AdminStaffController
+public class AdminStaffController implements ActionListener 
 {
     private String host = "localhost";
     private String database = "eattendance";
     private String user = "cgoodman";
     private String pass = "swe2015";
     private ArrayList<Staff> staffList; //Will hold a list of all Staff Members
-    
-   /*****************************************************************************
-    * Please use JavaDoc comments like this with all methods. JavaDoc is created by typing "/**"
-    * @param list parameters passed to the method if any
-    * @return list values returned by the method if any 
-    * 
-    * When called will request the adminStaffGUI class to load on
-    */
+    private add_staff_GUI staffGUI;
+
     public void loadStaffGUI()
     {
         //code to call and load staffGUI
@@ -47,56 +49,59 @@ public class AdminStaffController
         //code to call and load staffFormGUI
     }
     //---------------------------------------------------------------------------
-    public void uploadStaffDataExcel()
+    public void uploadStaffDataExcel() throws FileNotFoundException, IOException
     {
-        String filePath, extensionType = null;
+        String filePath;
+        String extensionType = "xlsx";
+        File selectedFile = null;
+        FileInputStream fis;
         
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.showOpenDialog(null);
+     
+        Scanner sc = new Scanner(fc.getSelectedFile());
+        selectedFile = fc.getSelectedFile();
         
+        fis = new FileInputStream(selectedFile);
         
+        filePath = selectedFile.getAbsolutePath();
+        extensionType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
         
-        try
+        System.out.println("Extension Type"+ extensionType);
+        
+        if (extensionType.equals("xlsx")) //If not an excel file, break out of the function with alert message 
         {
-            Scanner sc = new Scanner(fc.getSelectedFile());
-            File selectedFile = fc.getSelectedFile();
-            filePath = selectedFile.getAbsolutePath();
-            extensionType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
+                         //JOptionPane.showMessageDialog(null, "Uploading");
+        }
+        
+        else 
+        {
+            JOptionPane.showMessageDialog(null, "Invalid File Type. Please use an excel sheet using a .xlsx extension");
+            return;
+        }
+            
+        System.out.println(selectedFile);
+        //XSSFWorkbook wb = new XSSFWorkbook(); //Causing Error Here!!!
+        
+        //System.out.println(cell.getStringCellValue());
+       // System.out.println(rows);
 
-
-        } catch (FileNotFoundException ex){
-            Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);}
-       
-        
-        
-        
-        
-        
-        
-        
-        
     }
     
     /****************************************************************************
      * send Staff member data within the ArrayList of staff to the DataStore
+     * Function will be used with the Staff Form GUI
      * @param String name, position, email, username, password 
      */
     public void uploadStaffData(String staffID, String name, String position, String email, String username, 
-            String password) throws SQLException
+            String password, String user_type) throws SQLException
     {
+        user_type = "1";
         Connection conn = null;
         ResultSet rs = null;
         Statement st = null;
         
-        staffID = "qwe890";
-        name = "Ben Diaz";
-        position = "Teacher";
-        email = "bdiaz1@cub.uca.edu";
-        username = "bdiaz1";
-        password = "123456";
-        int user_type = 1;
-
         conn = DriverManager.getConnection("jdbc:mysql://" + host
                                 + "/" + database + "?"
                                 + "user=" + user
@@ -139,19 +144,15 @@ public class AdminStaffController
                    
         /*
         Use the statement to execute a query on the database and store the data in the result set. 
-        Result set data must be navigated row by row with a cursor. The cursor begins in the first() row 
-        and stores neccesary data before entering while loop. Loop will move cursor down row by row till
-        reaching end of the table 
+        Result set data must be navigated row by row with a cursor. The cursor begins before thefirst row with
+        beforeFirst(). Loop will move cursor down row by row till
+        reaching end of the table  storing each record found in a row
         */
         String query = "Select * from STAFF";
         String name, position, email;
         rs = st.executeQuery(query);                  
-        rs.first();                                         
-        name     = rs.getString("staff_name"); 
-        position = rs.getString("position");
-        email    = rs.getString("email");        
-        staffList.add(new Staff(name,position,email));
-                
+       
+        rs.beforeFirst();
         while(rs.next())
         {
             name     = rs.getString("staff_name");   
@@ -174,18 +175,27 @@ public class AdminStaffController
         }
     }
     
-    public static void main(String[] args) throws SQLException
+    
+    public void actionPerformed(ActionEvent e) //Function to handle events from the GUI's
     {
-        AdminStaffController asc = new AdminStaffController();
-        //asc.getStaffList();
-        //asc.displayStaffList();
-        //asc.uploadStaffData(null, null, null, null, null, null);
-        //asc.displayStaffList();
-        //asc.uploadStaffDataExcel();
-        String x = "cgoodman1";
-        String y = "475977";
-        LoginController lc = new LoginController(x,y);
-        System.out.println();
+        String cmd = e.getActionCommand();
+        System.out.println(cmd);
+        if (cmd.equals("Add Staff"))
+        {
+            System.out.println("Add Staff Button Clicked, staffFormGUI should load on");
+            //loadStaffFormGUI();
+        }
+        
+        if (cmd.equals("Upload Staff"))
+        {
+            System.out.println("Upload Staff Button Clicked");
+            try{
+                
+                uploadStaffDataExcel();
+                
+            } catch (IOException ex)
+            {Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);}
+        }
     }
 }
 

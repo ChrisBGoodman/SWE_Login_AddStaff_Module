@@ -1,7 +1,5 @@
-
-
-
 package SWE_Login_AddStaff_Module;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -25,7 +23,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.sql.SQLException;
 import static java.util.Collections.list;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author James, Christian
@@ -43,8 +44,14 @@ public class add_staff_GUI extends JFrame {
 	private JTable table;
 	private JFrame frame;
 	protected JTabbedPane tabPane;
+        private  JTable staffTable;
+        private int y;
 
-        private ArrayList<String> list; //Will hold a list of all Staff Members. Values will be returned as a string
+        
+        private AdminStaffController asc;
+
+        private ArrayList<Staff> list; //Will hold a list of all Staff Members. Values will be returned as a string
+        
        
 	protected JComponent makeTextPanel(String text) 
         {
@@ -57,18 +64,17 @@ public class add_staff_GUI extends JFrame {
         
         add_staff_GUI() 
             {
-              
                 super("Add Staff GUI");
 		this.setSize(700, 850);
 		setLayout(new FlowLayout());
+                
+                asc = new AdminStaffController();
                        
 		//put the e-attendace image up
-		//image1 = new ImageIcon(getClass().getResource("banner1.jpg")); //E-attendance banner 
+		image1 = new ImageIcon(getClass().getResource("images/eattdancelogo.jpg")); //E-attendance banner 
 		label1 = new JLabel(image1);
 		add(label1);
 	
-                //ImageIcon icon = new ImageIcon(getClass().getResource("name.PNG"));
-
                 JPanel mainPanel = new JPanel();
                 mainPanel.setLayout(new BorderLayout());
                 mainPanel.setPreferredSize(new Dimension(640,440));
@@ -95,31 +101,32 @@ public class add_staff_GUI extends JFrame {
                 c.fill = GridBagConstraints.BOTH;
                 c.weightx = 1;
                 c.weighty = 1;
-                JTable staffTable = new JTable(10, 3);
+                staffTable = new JTable(10, 3);
         
-                list = new ArrayList<String>();             //Add items to staff Table
-                list.add("Item1");
-                list.add("Item 2");
-                list.add(("Item 3"));
-                staffTable.setValueAt(list.get(0), 0, 0); //Just an example. Use a nested for loop looping 
-                staffTable.setValueAt(list.get(1), 0, 1); //thru list.size() to add each item in the list.
-                staffTable.setValueAt(list.get(2), 0, 2); //setValueAt(value, x Coord, Y Coord);
-        /*
-        Real code will look something like 
-        for (int x = 0; x < list.size(); x++)
-        {    
-            for (int y = 0; y < 3; y++)
-            {
-                table.setValueAt(list.get(x).username.toString(), x, y);
-                table.setValueAt(list.get(x).postion.toString(), x, y);
-                table.setValueAt(list.get(x).email.toString(), x, y);
-            }   
-        }
-        */
+                list = new ArrayList<Staff>();             //Add items to staff Table
+            
+                try{
+                    list = asc.getStaffList();
+                    
+
+                } catch (SQLException ex)
+                {Logger.getLogger(add_staff_GUI.class.getName()).log(Level.SEVERE, null, ex);}
+        
+                
+                
+                writeStaffTable();
+        
                 staffPanel.add(staffTable, c);
         
                 JButton Staff_Button = new JButton("Add Staff");
                 JButton upload_Staff_Button = new JButton("Upload Staff");
+                
+                Staff_Button.setActionCommand("Add Staff");
+                upload_Staff_Button.setActionCommand("Upload Staff");
+                 
+                Staff_Button.addActionListener(asc);
+                upload_Staff_Button.addActionListener(asc);
+                
         
                 mainPanel.add(staffPanel, BorderLayout.NORTH);
                 mainPanel.add(upload_Staff_Button, BorderLayout.LINE_START);
@@ -128,9 +135,24 @@ public class add_staff_GUI extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
             } //End Constructor
-
-	public static void main(String[] args) 
+        
+        
+        public void writeStaffTable()
         {
-		add_staff_GUI add_staff_GUI = new add_staff_GUI();
-	}
+            staffTable.setValueAt("                    NAME", 0, 0);
+            staffTable.setValueAt("                    POSITION", 0, 1);
+            staffTable.setValueAt("                    EMAIL", 0, 2);
+            
+            for (int x = 1; x <= list.size(); x++)
+                {
+                    y = 0;
+                    staffTable.setValueAt(list.get(x-1).name.toString(), x, y);
+                    y++;
+                    staffTable.setValueAt(list.get(x-1).position.toString(), x, y);
+                    y++;
+                    staffTable.setValueAt(list.get(x-1).email.toString(), x, y); 
+                }
+            
+        }
+        
 } //End class
