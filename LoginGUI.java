@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -36,7 +37,8 @@ class LoginGUI extends JFrame
     private JPanel mainPanel;
     
     private JTextField usernameJTF;
-    private JTextField passwordJTF;
+    //private JTextField passwordJTF;
+    //private JPasswordField passwordJTF;
     
     private LoginController lc;
     
@@ -51,7 +53,7 @@ class LoginGUI extends JFrame
         JLabel usernameLabel    = new JLabel("Username");   
         JLabel passwordLabel    = new JLabel("Password");
         JTextField usernameJTF  = new JTextField("", 15);
-        JTextField passwordJTF  = new JTextField("", 15);
+        JPasswordField passwordJTF  = new JPasswordField("", 15);
         usernameJTF.setColumns(15);
         passwordJTF.setColumns(15);
         
