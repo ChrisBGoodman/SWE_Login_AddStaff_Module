@@ -101,7 +101,8 @@ public class add_staff_GUI extends JFrame {
                 c.fill = GridBagConstraints.BOTH;
                 c.weightx = 1;
                 c.weighty = 1;
-                staffTable = new JTable(10, 3);
+                staffTable = new JTable(100, 3);
+                staffTable.setEnabled(false);
         
                 list = new ArrayList<Staff>();             //Add items to staff Table
             
@@ -137,7 +138,7 @@ public class add_staff_GUI extends JFrame {
             } //End Constructor
         
         
-        public void writeStaffTable()
+        public final void writeStaffTable()
         {
             staffTable.setValueAt("                    NAME", 0, 0);
             staffTable.setValueAt("                    POSITION", 0, 1);

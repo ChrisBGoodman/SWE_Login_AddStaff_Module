@@ -7,6 +7,7 @@ package SWE_Login_AddStaff_Module;
 
 public class Staff
 {
+    String staff_ID;
     String name;
     String position;
     String email;
@@ -14,8 +15,9 @@ public class Staff
     String userName;
     String passWord;
     
-    Staff(String name, String position, String email)
+    Staff(String staff_id, String name, String position, String email)
     {
+        this.staff_ID = staff_id;
         this.name = name;
         this.position = position;
         this.email = email;
