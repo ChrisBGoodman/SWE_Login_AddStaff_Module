@@ -5,7 +5,10 @@
  */
 package SWE_Login_AddStaff_Module;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  *
@@ -13,8 +16,7 @@ import java.io.IOException;
  */
 public class mainRunnable
 {
-    
-    public static void main(String args[]) throws IOException
+    public static void main(String args[]) throws IOException, FileNotFoundException, InvalidFormatException, SQLException
     {
         
         LoginGUI lg = new LoginGUI();
@@ -22,10 +24,12 @@ public class mainRunnable
         //add_staff_GUI staffGUI = new add_staff_GUI(); //Use this to view our GUI's
 
         //AdminStaffController asc = new AdminStaffController();
+        //asc.getStaffList();
+        //asc.displayStaffList();
             //asc.uploadStaffData(staffID, name, position, email, username, password); 
             //asc.uploadStaffDataExcel();   //work in progress will be finished soon
+            //asc.displayStaffList();
         
-
     }
 }
 

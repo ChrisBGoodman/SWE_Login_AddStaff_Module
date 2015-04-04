@@ -12,11 +12,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -38,7 +40,7 @@ public class AdminStaffController implements ActionListener
 
     public void loadStaffGUI()
     {
-        //code to call and load staffGUI
+        staffGUI = new add_staff_GUI();
     }
     
     /****************************************************************************
@@ -49,44 +51,103 @@ public class AdminStaffController implements ActionListener
         //code to call and load staffFormGUI
     }
     //---------------------------------------------------------------------------
-    public void uploadStaffDataExcel() throws FileNotFoundException, IOException
+    public void uploadStaffDataExcel() throws FileNotFoundException, IOException, InvalidFormatException, SQLException
     {
         String filePath;
         String extensionType = "xlsx";
         File selectedFile = null;
         FileInputStream fis;
         
+        //Open the System File Explorer
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.showOpenDialog(null);
      
+        //Read in a selected file from user selection
         Scanner sc = new Scanner(fc.getSelectedFile());
         selectedFile = fc.getSelectedFile();
-        
         fis = new FileInputStream(selectedFile);
         
+        //Check extionsion type of the file to make sure it is excel
         filePath = selectedFile.getAbsolutePath();
         extensionType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
-        
         System.out.println("Extension Type"+ extensionType);
         
         if (extensionType.equals("xlsx")) //If not an excel file, break out of the function with alert message 
-        {
-                         //JOptionPane.showMessageDialog(null, "Uploading");
-        }
+            JOptionPane.showMessageDialog(null, "Uploading");
         
-        else 
+            else 
         {
             JOptionPane.showMessageDialog(null, "Invalid File Type. Please use an excel sheet using a .xlsx extension");
             return;
         }
-            
-        System.out.println(selectedFile);
-        //XSSFWorkbook wb = new XSSFWorkbook(); //Causing Error Here!!!
         
-        //System.out.println(cell.getStringCellValue());
-       // System.out.println(rows);
-
+        // -- Create the connection --
+        Connection conn = null;
+        ResultSet rs = null;
+        Statement st = null;
+        
+        conn = DriverManager.getConnection("jdbc:mysql://" + host
+                                + "/" + database + "?"
+                                + "user=" + user
+                                + "&password=" + pass);   
+        
+        // -- Create connection to the workbook from the file selected --        
+        XSSFWorkbook wb = new XSSFWorkbook(selectedFile);
+        XSSFSheet ws = wb.getSheetAt(0);
+        XSSFRow row;
+        
+        // -- Vars for reading --
+        int rows = ws.getPhysicalNumberOfRows();    //Number of rows in file
+        String staff_ID, staff_name, position, email, username, password;   //Strings to hold column data
+        int user_type =  1;
+        int i = 1;                                  //Iterate starting from row 2 since row 1 should contain headers 
+        boolean staffExist;                         //tells if a staff member is present in arrayList already
+        
+        
+        row = ws.getRow(1); //Get Row 1 skipping row 0 containing the headers of each column
+        while (row != null)
+        {
+            staff_ID    = row.getCell(0).toString();
+            staff_name  = row.getCell(1).toString();        
+            position    = row.getCell(2).toString();
+            email       = row.getCell(3).toString();
+            username    = row.getCell(4).toString();
+            password    = row.getCell(5).toString();
+            
+            staffExist = false;
+            for(int x = 0; x < staffList.size(); x++) //loop thru arraylist checking for matching staff ID
+            {
+                if (staffList.get(x).staff_ID.equals(staff_ID))
+                {
+                    staffExist = true; //Staff member found in arrayList
+                }
+            }
+            
+            if (staffExist == false) //If false, insert into list and DB 
+            {            
+                staffList.add(new Staff(staff_ID,staff_name,position,email));
+                st = conn.createStatement();
+                st.executeUpdate("INSERT into Staff " + "VALUES('" 
+                    + staff_ID  + "','" 
+                    + staff_name+ "','" 
+                    + position  + "','"
+                    + email     + "','" 
+                    + username  + "','" 
+                    + password  + "')");
+        
+                st = conn.createStatement();
+                st.executeUpdate("INSERT into user " + "VALUES('"
+                    + username + "','"
+                    + password + "','"
+                   + user_type+ "')");
+            }
+            i++; //Increment to next row 
+            row = ws.getRow(i); 
+        }
+        conn.close();    
+        JOptionPane.showMessageDialog(null, "Success! Returning to home screen");
+        loadStaffGUI();
     }
     
     /****************************************************************************
@@ -149,17 +210,17 @@ public class AdminStaffController implements ActionListener
         reaching end of the table  storing each record found in a row
         */
         String query = "Select * from STAFF";
-        String name, position, email;
+        String id, name, position, email;
         rs = st.executeQuery(query);                  
        
         rs.beforeFirst();
         while(rs.next())
         {
+            id       = rs.getString("staff_id");
             name     = rs.getString("staff_name");   
             position = rs.getString("position");
             email    = rs.getString("email");
-            staffList.add(new Staff(name,position,email));
-
+            staffList.add(new Staff(id,name,position,email));
         }        
         conn.close();
         return staffList;
@@ -189,12 +250,20 @@ public class AdminStaffController implements ActionListener
         if (cmd.equals("Upload Staff"))
         {
             System.out.println("Upload Staff Button Clicked");
-            try{
-                
+            try
+            {
                 uploadStaffDataExcel();
-                
             } catch (IOException ex)
-            {Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);}
+            {
+                Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidFormatException ex)
+            {
+                Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex)
+            {
+                Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }
 }
