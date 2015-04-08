@@ -20,15 +20,21 @@ public class mainRunnable
     public static void main(String args[]) throws IOException, FileNotFoundException, InvalidFormatException, SQLException
     {
         
-        //LoginGUI lg = new LoginGUI();
+        LoginGUI lg = new LoginGUI();
         
-
-
+        //testPanel p = new testPanel();
+        //adminHomePanels a = new adminHomePanels();
         // -- Z --
         //courseFormGUI cfg = new courseFormGUI();
+        
+        //adminCourseGUI acg = new adminCourseGUI();
+        //adminCourseController acc = new adminCourseController();
+        //acc.run();
 
-        adminCourseController acc = new adminCourseController();
-
+        
+        
+        
+        
         //add_staff_GUI staffGUI = new add_staff_GUI(); //Use this to view our GUI's
 
         //AdminStaffController asc = new AdminStaffController();

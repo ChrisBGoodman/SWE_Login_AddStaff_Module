@@ -87,7 +87,7 @@ public class AdminStaffFormGUI extends JFrame
         
         // Set Panel Layouts
         formPanel.setLayout(new GridLayout(6,2));
-        coursePanel.setLayout(new GridLayout(2,2));
+        coursePanel.setLayout(new GridLayout(3,2));
         buttonPanel.setLayout(new GridLayout(1,2));
         mainPanel.setLayout(new BorderLayout());
                 

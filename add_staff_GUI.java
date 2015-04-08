@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * @author James, Christian
  *
  */
-public class add_staff_GUI extends JFrame {
+public class add_staff_GUI extends JPanel {
 	/**
 	 * 
 	 */
@@ -44,6 +44,7 @@ public class add_staff_GUI extends JFrame {
         private JPanel panel;
 	private JTable table;
         private JPanel addStaffPanel;
+        private JPanel staffPanel;
 	
         private JFrame frame;
 	protected JTabbedPane tabPane;
@@ -72,34 +73,19 @@ public class add_staff_GUI extends JFrame {
         
         add_staff_GUI() 
             {
-                super("Add Staff GUI");
-		this.setSize(700, 850);
+		this.setSize(500, 550);
 		setLayout(new FlowLayout());
                 
                 asc = new AdminStaffController();
-                       
-		//put the e-attendace image up
-		image1 = new ImageIcon(getClass().getResource("images/eattdancelogo.jpg")); //E-attendance banner 
-		label1 = new JLabel(image1);
-		add(label1);
-	
+                
+                //- Panel to hold all add Staff interface --
                 addStaffPanel = new JPanel();
                 addStaffPanel.setLayout(new BorderLayout());
                 addStaffPanel.setPreferredSize(new Dimension(640,440));
 		
-                JPanel staffPanel = new JPanel();
+                staffPanel = new JPanel();
                 staffPanel.setPreferredSize(new Dimension(600, 400));
 
-		JPanel panel2 = new JPanel();
-		JPanel panel3 = new JPanel();
-		JPanel panel4 = new JPanel();
-                                                               //Makes the tabbs
-		JTabbedPane tabbedPane = new JTabbedPane();
-                tabbedPane.addTab("Courses", panel2);
-                tabbedPane.addTab("Staff", addStaffPanel);
-                tabbedPane.addTab("Students", panel3);
-                tabbedPane.addTab("Logout", panel4);
-                add(tabbedPane);
         
                 staffPanel.setLayout(new GridBagLayout());
                 GridBagConstraints c = new GridBagConstraints();
@@ -121,7 +107,7 @@ public class add_staff_GUI extends JFrame {
                 {Logger.getLogger(add_staff_GUI.class.getName()).log(Level.SEVERE, null, ex);}
         
                 
-                
+                //Gathers data from the ArrayList of staff and inserts it into the JTable
                 writeStaffTable();
         
                 
@@ -143,23 +129,8 @@ public class add_staff_GUI extends JFrame {
                 addStaffPanel.add(uploadStaffJB, BorderLayout.LINE_START);
                 addStaffPanel.add(staffJB, BorderLayout.LINE_END);
                 
-                // -- LOGOUT Panel Options --
-                logoutJB = new JButton("Logout");
-                panel4.add(logoutJB);
-                
-                logoutJB.addActionListener(new ActionListener()     //Action for submit button
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent e)
-                    {                               
-                        System.out.println("Logout Button pressed");                            
-                        System.exit(0);
-                    }
-                });
-                
-                
-        
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                add(addStaffPanel);
+               
 		this.setVisible(true);
             } //End Constructor
         
@@ -179,7 +150,5 @@ public class add_staff_GUI extends JFrame {
                     y++;
                     staffTable.setValueAt(list.get(x-1).email.toString(), x, y); 
                 }
-            
-        }
-        
+        }      
 } //End class

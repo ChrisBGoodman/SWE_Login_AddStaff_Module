@@ -82,7 +82,8 @@ class LoginGUI extends JFrame
                 if (lc.loginSuccess == true && user_type == admin)//If succesfull close login GUI 
                 {                                               //and open up Admin View 
                     dispose();
-                    add_staff_GUI staffGUI = new add_staff_GUI();
+                    //add_staff_GUI staffGUI = new add_staff_GUI();
+                    adminHomePanels ahp = new adminHomePanels();
                 }
             }
         });
