@@ -37,6 +37,9 @@ public class AdminStaffController implements ActionListener
     private String pass = "swe2015";
     private ArrayList<Staff> staffList; //Will hold a list of all Staff Members
     private add_staff_GUI staffGUI;
+    private AdminStaffFormGUI staffFormGUI;
+    boolean staffExist;                         //tells if a staff member is present in arrayList already
+
 
     public void loadStaffGUI()
     {
@@ -48,7 +51,7 @@ public class AdminStaffController implements ActionListener
      */
     public void loadStaffFormGUI()
     {
-        //code to call and load staffFormGUI
+        staffFormGUI = new AdminStaffFormGUI();
     }
     //---------------------------------------------------------------------------
     public void uploadStaffDataExcel() throws FileNotFoundException, IOException, InvalidFormatException, SQLException
@@ -102,7 +105,6 @@ public class AdminStaffController implements ActionListener
         String staff_ID, staff_name, position, email, username, password;   //Strings to hold column data
         int user_type =  1;
         int i = 1;                                  //Iterate starting from row 2 since row 1 should contain headers 
-        boolean staffExist;                         //tells if a staff member is present in arrayList already
         
         
         row = ws.getRow(1); //Get Row 1 skipping row 0 containing the headers of each column
@@ -153,12 +155,13 @@ public class AdminStaffController implements ActionListener
     /****************************************************************************
      * send Staff member data within the ArrayList of staff to the DataStore
      * Function will be used with the Staff Form GUI
-     * @param String name, position, email, username, password 
+     * @param String name, String position, email, username, password 
      */
     public void uploadStaffData(String staffID, String name, String position, String email, String username, 
             String password, String user_type) throws SQLException
     {
-        user_type = "1";
+        String staff_seq = null, course_code_ug = null, course_code_g = null;
+        user_type = "2";
         Connection conn = null;
         ResultSet rs = null;
         Statement st = null;
@@ -168,8 +171,24 @@ public class AdminStaffController implements ActionListener
                                 + "user=" + user
                                 + "&password=" + pass);   
         
-        st = conn.createStatement();
-        st.executeUpdate("INSERT into Staff " + "VALUES('" 
+        //Make sure given ID is not already present in the list of staff we have
+        staffExist = false;
+        ArrayList<Staff> list = new ArrayList<Staff>();
+        list = getStaffList();
+        
+        for(int x = 0; x < list.size()-1; x++) //loop thru arraylist checking for matching staff ID
+            {
+                if (list.get(x).staff_ID.equals(staffID))
+                {
+                    staffExist = true; //Staff member found in arrayList
+                }
+            }
+        
+        if(staffExist == false)
+        {
+            // -- INSERT into Staff --
+            st = conn.createStatement();
+            st.executeUpdate("INSERT into Staff " + "VALUES('" 
                 + staffID + "','" 
                 + name      + "','" 
                 + position  + "','"
@@ -177,11 +196,33 @@ public class AdminStaffController implements ActionListener
                 + username  + "','" 
                 + password  + "')");
         
-        st.executeUpdate("INSERT into User " + "VALUES('"
+            // -- INSERT into User --
+            st = conn.createStatement();
+            st.executeUpdate("INSERT into User " + "VALUES('"
                 + username + "','"
                 + password + "','"
-                + user_type+ "','");
+                + user_type+ "')");
+            
+            // --= INSERT into staff_courses 
+            /* //Find the course data associated with the name passed to it from function.
+            st = conn.createStatement();
+            st.executeUpdate("INSERT into staff_courses " + "VALUES('"
+                    + staff_seq + "','"
+                    + staffID   + "','"
+                    + course_code_ug + "','"
+                    + course_code_g  + "')");
+            */
+            
+            JOptionPane.showMessageDialog(null, "Inserted");
+
+        }
         
+        if(staffExist == true)
+        {
+            System.out.println("Staff exist...");
+            JOptionPane.showMessageDialog(null, "Oops, look like this ID is already in use. Error 002");
+
+        }
         conn.close();
     }
     
@@ -244,7 +285,7 @@ public class AdminStaffController implements ActionListener
         if (cmd.equals("Add Staff"))
         {
             System.out.println("Add Staff Button Clicked, staffFormGUI should load on");
-            //loadStaffFormGUI();
+            loadStaffFormGUI();
         }
         
         if (cmd.equals("Upload Staff"))

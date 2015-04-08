@@ -66,17 +66,7 @@ class LoginController
           
             query = "Select username, password from user";
             rs = st.executeQuery(query);
-            
-            /*rs.first();
-            DBusername = rs.getString("username");
-            DBpassword = rs.getString("password");
-        
-            if (username.equalsIgnoreCase(DBusername) && password.equals(DBpassword))
-            {
-                conn.close();
-                System.out.println("Login Succesfull");
-                return true;
-            }*/
+           
             rs.beforeFirst();
             while (rs.next())
             {
@@ -95,7 +85,9 @@ class LoginController
             conn.close();
         
             } catch (SQLException ex){
-                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);}
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Oops, Couldn't connect to the server. Error 001");
+            }
         
         //PROMT ALERT message for invalid login 
         JOptionPane.showMessageDialog(null, "Invalid username/password combination. Please try again");
@@ -107,7 +99,7 @@ class LoginController
     /****************************************************************************
      * 
      * Queries data store to search for matching username and password                                                                         
-     * @return integer 1 for admin account, integer 2 for staff                                                
+     * @return integer 1 for admin account, integer 2 for staff, 0 and error for not found                                            
      */
     public int validateUser()
     {
@@ -135,20 +127,21 @@ class LoginController
             if (DBuser_type.equals("1"))
             {
                 System.out.println("Admin Account");
+                return 1;
                 //load admin view
             }
             
             if (DBuser_type.equals("2"))
             {
                 System.out.println("Staff Account");
-                //load staff view
+                return 2;
             }
             
             conn.close();
         
             } catch (SQLException ex){
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Validation error. Could not find user_type");}
+            System.out.println("Validation error. Could not find user_type. ERROR 003");}
         return 0;
     } 
     
@@ -161,8 +154,6 @@ class LoginController
             System.out.println("Submit pressed!");
            
         }
-        
-        
     }
 }
 

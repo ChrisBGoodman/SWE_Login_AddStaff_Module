@@ -37,15 +37,23 @@ public class add_staff_GUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Panel staff_GUI;
 	private ImageIcon image1;
-	private JLabel label1;
-	private JPanel panel;
+	
+        private JLabel label1;
+	
+        private JPanel panel;
 	private JTable table;
-	private JFrame frame;
+        private JPanel addStaffPanel;
+	
+        private JFrame frame;
 	protected JTabbedPane tabPane;
-        private  JTable staffTable;
-        private int y;
+        
+        private JTable staffTable;
+        private JScrollPane scrollPane; 
+        
+        private JButton staffJB;
+        private JButton uploadStaffJB;
+        private JButton logoutJB;
 
         
         private AdminStaffController asc;
@@ -75,9 +83,9 @@ public class add_staff_GUI extends JFrame {
 		label1 = new JLabel(image1);
 		add(label1);
 	
-                JPanel mainPanel = new JPanel();
-                mainPanel.setLayout(new BorderLayout());
-                mainPanel.setPreferredSize(new Dimension(640,440));
+                addStaffPanel = new JPanel();
+                addStaffPanel.setLayout(new BorderLayout());
+                addStaffPanel.setPreferredSize(new Dimension(640,440));
 		
                 JPanel staffPanel = new JPanel();
                 staffPanel.setPreferredSize(new Dimension(600, 400));
@@ -88,7 +96,7 @@ public class add_staff_GUI extends JFrame {
                                                                //Makes the tabbs
 		JTabbedPane tabbedPane = new JTabbedPane();
                 tabbedPane.addTab("Courses", panel2);
-                tabbedPane.addTab("Staff", mainPanel);
+                tabbedPane.addTab("Staff", addStaffPanel);
                 tabbedPane.addTab("Students", panel3);
                 tabbedPane.addTab("Logout", panel4);
                 add(tabbedPane);
@@ -108,8 +116,7 @@ public class add_staff_GUI extends JFrame {
             
                 try{
                     list = asc.getStaffList();
-                    
-
+                   
                 } catch (SQLException ex)
                 {Logger.getLogger(add_staff_GUI.class.getName()).log(Level.SEVERE, null, ex);}
         
@@ -117,23 +124,42 @@ public class add_staff_GUI extends JFrame {
                 
                 writeStaffTable();
         
-                staffPanel.add(staffTable, c);
-        
-                JButton Staff_Button = new JButton("Add Staff");
-                JButton upload_Staff_Button = new JButton("Upload Staff");
                 
-                Staff_Button.setActionCommand("Add Staff");
-                upload_Staff_Button.setActionCommand("Upload Staff");
-                 
-                Staff_Button.addActionListener(asc);
-                upload_Staff_Button.addActionListener(asc);
+                // -- Adding Scrolling Table -- 
+                scrollPane = new JScrollPane(staffTable);
+                staffPanel.add(scrollPane, c);
+        
+                // -- Add Buttons & Listeners --
+                staffJB = new JButton("Add Staff");                
+                staffJB.setActionCommand("Add Staff");
+                staffJB.addActionListener(asc);
+
+                uploadStaffJB = new JButton("Upload Staff");
+                uploadStaffJB.setActionCommand("Upload Staff");
+                uploadStaffJB.addActionListener(asc);
+                
+                // -- Add to Staff Panel --
+                addStaffPanel.add(staffPanel, BorderLayout.NORTH);
+                addStaffPanel.add(uploadStaffJB, BorderLayout.LINE_START);
+                addStaffPanel.add(staffJB, BorderLayout.LINE_END);
+                
+                // -- LOGOUT Panel Options --
+                logoutJB = new JButton("Logout");
+                panel4.add(logoutJB);
+                
+                logoutJB.addActionListener(new ActionListener()     //Action for submit button
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {                               
+                        System.out.println("Logout Button pressed");                            
+                        System.exit(0);
+                    }
+                });
+                
                 
         
-                mainPanel.add(staffPanel, BorderLayout.NORTH);
-                mainPanel.add(upload_Staff_Button, BorderLayout.LINE_START);
-                mainPanel.add(Staff_Button, BorderLayout.LINE_END);
-        
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
             } //End Constructor
         
@@ -143,7 +169,7 @@ public class add_staff_GUI extends JFrame {
             staffTable.setValueAt("                    NAME", 0, 0);
             staffTable.setValueAt("                    POSITION", 0, 1);
             staffTable.setValueAt("                    EMAIL", 0, 2);
-            
+            int y = 0;
             for (int x = 1; x <= list.size(); x++)
                 {
                     y = 0;

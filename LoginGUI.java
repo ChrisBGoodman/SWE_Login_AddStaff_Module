@@ -2,9 +2,11 @@ package SWE_Login_AddStaff_Module;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
@@ -33,12 +35,13 @@ class LoginGUI extends JFrame
     private JLabel iconLabel;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
+    private JLabel infoLabel;
+    
     private JPanel loginPanel;
     private JPanel mainPanel;
+    private JPanel infoPanel;
     
     private JTextField usernameJTF;
-    //private JTextField passwordJTF;
-    //private JPasswordField passwordJTF;
     
     private LoginController lc;
     
@@ -46,8 +49,10 @@ class LoginGUI extends JFrame
     {
         //JFrame options
         super("Login");                             
-        this.setSize(700, 850);	
-        setLayout(new BorderLayout());
+        this.setSize(600, 450);	
+        //setLayout(new BorderLayout());
+        BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS); // top to bottom
+        setLayout(boxLayout);
         
         //Login Fields optiions
         JLabel usernameLabel    = new JLabel("Username");   
@@ -57,9 +62,11 @@ class LoginGUI extends JFrame
         usernameJTF.setColumns(15);
         passwordJTF.setColumns(15);
         
+        // -- BUTTONS --
         JButton submitJB = new JButton("Submit");
+        JButton cancelJB = new JButton("Cancel");
         submitJB.setActionCommand("Submit Button");
-        submitJB.addActionListener(new ActionListener() 
+        submitJB.addActionListener(new ActionListener()     //Action for submit button
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -68,18 +75,40 @@ class LoginGUI extends JFrame
                 userName = usernameJTF.getText();   
                 passWord = passwordJTF.getText();
                 lc = new LoginController(userName, passWord);   //Try to login with text from the JTF's
-                if (lc.loginSuccess == true)                    //If succesfull close login GUI 
+                int user_type = lc.validateUser();
+                int admin = 1;
+                int staff = 2;
+                
+                if (lc.loginSuccess == true && user_type == admin)//If succesfull close login GUI 
                 {                                               //and open up Admin View 
                     dispose();
                     add_staff_GUI staffGUI = new add_staff_GUI();
                 }
             }
         });
+        
+        cancelJB.addActionListener(new ActionListener()     //Action for submit button
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {                               
+                System.out.println("Login cancel Button pressed");                            
+                System.exit(0);
+            }
+        });
+        
+       
 
          //Login Panel options
         loginPanel = new JPanel();  
-        loginPanel.setMaximumSize(new Dimension(100,300));
-        loginPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        loginPanel.setMaximumSize(new Dimension(1280,100));
+        loginPanel.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        loginPanel.setLayout(new GridLayout(3,2));
+        
+        //Info Panel & Label Options
+        infoLabel = new JLabel("E-Attedance System - Developed by Paul Young's Software Engineering students.");
+        infoPanel = new JPanel();
+        infoPanel.setMaximumSize(new Dimension(1280,100));
         
         
         //Icon options
@@ -89,13 +118,21 @@ class LoginGUI extends JFrame
         
    
         //Add Panels to Frame    
-        add(iconLabel, BorderLayout.NORTH);
         loginPanel.add(usernameLabel);
         loginPanel.add(usernameJTF);
         loginPanel.add(passwordLabel);
         loginPanel.add(passwordJTF);
         loginPanel.add(submitJB);
-        add(loginPanel, BorderLayout.CENTER);
+        loginPanel.add(cancelJB);
+        
+        JLabel test = new JLabel("Developed 2015. For support email test@uca.edu");
+        
+        infoPanel.add(infoLabel);
+        infoPanel.add(test);
+                
+        add(iconLabel, BorderLayout.NORTH);
+        add(infoPanel, BorderLayout.SOUTH);
+        add(loginPanel, BoxLayout.Y_AXIS);
         
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         		
