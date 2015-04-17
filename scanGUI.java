@@ -9,12 +9,6 @@ import javax.swing.JFrame;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
@@ -22,6 +16,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import javax.swing.JTextArea;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
 
 
 public class scanGUI extends JFrame implements Runnable, ThreadFactory {
@@ -39,7 +40,7 @@ public class scanGUI extends JFrame implements Runnable, ThreadFactory {
 
 		setLayout(new FlowLayout());
 		setTitle("Read QR / Bar Code With Webcam");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		Dimension size = WebcamResolution.QVGA.getSize();
 
@@ -81,7 +82,11 @@ public class scanGUI extends JFrame implements Runnable, ThreadFactory {
 					continue;
 				}
 
-				LuminanceSource source = new BufferedImageLuminanceSource(image);
+                                
+                                
+                                LuminanceSource source = new BufferedImageLuminanceSource(image);
+
+                                
 				BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
 				try {
