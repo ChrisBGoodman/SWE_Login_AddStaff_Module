@@ -16,8 +16,10 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -81,7 +83,7 @@ public class AdminStaffController implements ActionListener
         
             else 
         {
-            JOptionPane.showMessageDialog(null, "Invalid File Type. Please use an excel sheet using a .xlsx extension");
+            JOptionPane.showMessageDialog(null, "Error 004. Invalid File Type. Please use an excel sheet using a .xlsx extension");
             return;
         }
         
@@ -103,8 +105,16 @@ public class AdminStaffController implements ActionListener
         // -- Vars for reading --
         int rows = ws.getPhysicalNumberOfRows();    //Number of rows in file
         String staff_ID, staff_name, position, email, username, password;   //Strings to hold column data
+        String course1 = null;
+        String course2 = null;
+        String course3 = null;
+        String course4 = null;
         int user_type =  1;
         int i = 1;                                  //Iterate starting from row 2 since row 1 should contain headers 
+        ArrayList<String> courseList = new ArrayList<String>(); 
+        int staff_seq = 0;
+
+
         
         
         row = ws.getRow(1); //Get Row 1 skipping row 0 containing the headers of each column
@@ -116,7 +126,33 @@ public class AdminStaffController implements ActionListener
             email       = row.getCell(3).toString();
             username    = row.getCell(4).toString();
             password    = row.getCell(5).toString();
+           
+            // --Checking for courses of a staff member--
+            courseList.clear(); //clear the list 
             
+            if(row.getCell(6) != null){           
+                course1 = row.getCell(6).toString();
+                courseList.add(course1);
+            }
+            
+            if(row.getCell(7) != null)
+            {
+                course2 = row.getCell(7).toString();
+                courseList.add(course2);
+            }
+            
+            if(row.getCell(8) != null)
+            {
+                course3 = row.getCell(8).toString();
+                courseList.add(course3);
+            }
+            
+            if(row.getCell(9) != null)
+            {
+                course4 = row.getCell(9).toString();
+                courseList.add(course4);
+            }
+
             staffExist = false;
             for(int x = 0; x < staffList.size(); x++) //loop thru arraylist checking for matching staff ID
             {
@@ -143,7 +179,26 @@ public class AdminStaffController implements ActionListener
                     + username + "','"
                     + password + "','"
                    + user_type+ "')");
+                
+                for(int x = 0; x < courseList.size(); x++)
+                {
+                    staff_seq++;
+                    if(!courseList.get(x).isEmpty()) //if not empty
+                    {
+                        double tmp = Double.parseDouble(staff_ID);
+                        int id = (int) tmp;
+                        
+                        System.out.println("inseerting course");
+                        st = conn.createStatement();
+                        st.executeUpdate("INSERT into staff_courses " + "VALUES('"
+                            + staff_seq      + "','"
+                            + id                      + "','"
+                            + courseList.get(x).toString()    + "','"
+                            + "0"                             + "')");    
+                    }
+                }
             }
+            
             i++; //Increment to next row 
             row = ws.getRow(i); 
         }
@@ -277,7 +332,14 @@ public class AdminStaffController implements ActionListener
         }
     }
     
+    public void findCourses(String c1, String c2, String c3, String c4)
+    {
+        
+        
+    }
     
+    
+    @Override
     public void actionPerformed(ActionEvent e) //Function to handle events from the GUI's
     {
         String cmd = e.getActionCommand();
@@ -307,5 +369,8 @@ public class AdminStaffController implements ActionListener
             
         }
     }
+    
+    
+    
 }
 

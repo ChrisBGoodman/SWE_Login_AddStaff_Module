@@ -7,8 +7,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -82,9 +86,20 @@ class LoginGUI extends JFrame
                 if (lc.loginSuccess == true && user_type == admin)//If succesfull close login GUI 
                 {                                               //and open up Admin View 
                     dispose();
-                    //add_staff_GUI staffGUI = new add_staff_GUI();
                     adminHomePanels ahp = new adminHomePanels();
                 }
+                
+                if(lc.loginSuccess == true && user_type == staff)
+                {
+                    dispose();
+                    try
+                    {
+                        staffHomePanels shp = new staffHomePanels(userName);
+                    } catch (SQLException ex)
+                    {Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);}
+                }
+                
+                
             }
         });
         
@@ -113,7 +128,7 @@ class LoginGUI extends JFrame
         
         
         //Icon options
-        lockImage = new ImageIcon(getClass().getResource("images/lock.jpg"));   
+        lockImage = new ImageIcon(getClass().getResource("/images/lock.jpg"));   
         iconLabel = new JLabel(lockImage);
         add(iconLabel, BorderLayout.NORTH);
         

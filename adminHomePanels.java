@@ -5,6 +5,7 @@
  */
 package SWE_Login_AddStaff_Module;
 
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -44,7 +45,7 @@ public class adminHomePanels extends JFrame
                 
                        
 		//put the e-attendace image up
-		image1 = new ImageIcon(getClass().getResource("images/eattdancelogo.jpg")); //E-attendance banner 
+		image1 = new ImageIcon(getClass().getResource("/images/eattdancelogo.jpg")); //E-attendance banner 
 		label1 = new JLabel(image1);
 		add(label1);
 	

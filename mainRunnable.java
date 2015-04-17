@@ -30,6 +30,10 @@ public class mainRunnable
         //adminCourseGUI acg = new adminCourseGUI();
         //adminCourseController acc = new adminCourseController();
         //acc.run();
+        
+        //staffCourseController scc = new staffCourseController();
+        //scc.getStudentList();
+        //scc.getCourseStudentsID(111);
 
         
         
@@ -47,7 +51,7 @@ public class mainRunnable
             //asc.uploadStaffData(staffID, name, position, email, username, password); 
             //asc.uploadStaffData("aa534", "te4st", "test", "test", "tes6t", "test", "2"); 
                         
-
+            //asc.getStaffList();
             //asc.uploadStaffDataExcel();   //work in progress will be finished soon
             //asc.displayStaffList();
         

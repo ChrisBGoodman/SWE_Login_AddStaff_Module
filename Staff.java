@@ -1,5 +1,7 @@
 package SWE_Login_AddStaff_Module;
 
+import java.util.ArrayList;
+
 /**
  * @author ChrisGoodman, James Johnson, Dennis Smith, Ben Boaz, Sherry Wang
  * @since 03/16/2015
@@ -11,7 +13,7 @@ public class Staff
     String name;
     String position;
     String email;
-    //ArrayList<course> courses;
+    ArrayList<Course> courses;
     String userName;
     String passWord;
     
@@ -21,6 +23,11 @@ public class Staff
         this.name = name;
         this.position = position;
         this.email = email;
+    }
+    
+    public void setStaffCourses(ArrayList<Course> c)
+    {
+        this.courses = c;
     }
     
 }

@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+
+
 /**
  *
  * @author z
@@ -19,7 +21,9 @@ public class adminCourseController implements ActionListener {
     private adminCourseGUI courseGUI;
     private courseFormGUI formGUI;
     private readFromExcel excelReader;
-
+    private ArrayList<ArrayList<String>> list; 
+    
+    
     public adminCourseController() {
         
 
@@ -27,12 +31,17 @@ public class adminCourseController implements ActionListener {
 
     public void run() {
         excelReader = new readFromExcel();
-        ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
+        list = new ArrayList<ArrayList<String>>();
         list = excelReader.getData();
         //courseGUI = new adminCourseGUI(excelReader.getData());
         /* Create and display the form */
         //courseGUI.setVisible(false);
 
+    }
+    
+    public ArrayList<ArrayList<String>> getCourses()
+    {
+        return list;
     }
 
     

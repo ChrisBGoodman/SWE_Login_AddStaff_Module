@@ -93,7 +93,7 @@ public class AdminStaffFormGUI extends JFrame
                 
         
         //put the image up
-        image1 = new ImageIcon(getClass().getResource("images/staffBlackboard.jpg")); //E-attendance banner 
+        image1 = new ImageIcon(getClass().getResource("/images/staffBlackboard.jpg")); //E-attendance banner 
         label1 = new JLabel(image1);
         imagePanel.add(label1);
         
@@ -144,8 +144,16 @@ public class AdminStaffFormGUI extends JFrame
         //Will be replaced with ArrayList of courses
         //ArrayList<course> courses = new ArrayList<course();
         //Then the list will be generated from the array of courses by name.
+        ArrayList<ArrayList<String>> courses = new ArrayList<ArrayList<String>>();
+        adminCourseController acc = new adminCourseController();
+        courses = acc.getCourses();
+        
+        
         String sampleCourseData[] = {"apple", "orange", "banana", "pear", "pumpkin", "bears","lions", "tigers", "oMY!"};
         courseListLabel = new JLabel("Courses Taught: ");
+        
+
+        
         courseList      = new JList(sampleCourseData);
         listScrollPane = new JScrollPane(courseList);
         coursePanel.add(courseListLabel);
