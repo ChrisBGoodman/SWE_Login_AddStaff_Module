@@ -24,10 +24,9 @@ class LoginController
     private String pass = "swe2015";
     String username;
     String password;
-    int userType;               //Integer value used to represent if a user is Admin(1) or Staff(2) or invalid (0)
+    int userType;   //Integer value used to represent if a user is Admin(1) or Staff(2) or invalid (0)
     
     /**
-     * 
      * @param u username passed from the LoginGUI
      * @param p password passed from the LoginGUI
      */
@@ -40,30 +39,18 @@ class LoginController
     
     LoginController()
     {
-        //Empty Constructor
+        //Empty Constructor for calling class functions
     }
     
-    
-    /****************************************************************************
-     * 
-     */
     private boolean login()
     {
-        if (username.equalsIgnoreCase("test") && password.equals("test"))
-                {
-                    System.out.println("Login Succesfull");
-                    loginSuccess = true;
-                    return true;
-                }
-        
-        
-        
         String query, DBusername, DBpassword;
         
         Connection conn = null;
         ResultSet rs = null;
         Statement st = null;
-
+        
+        // -- Make connection to DB --
         try
         {
             conn = DriverManager.getConnection("jdbc:mysql://" + host
@@ -73,6 +60,8 @@ class LoginController
         
             st = conn.createStatement(rs.TYPE_SCROLL_SENSITIVE,rs.CONCUR_UPDATABLE);
           
+            // -- Execute A query on the DB --
+            // -- Loop thru all pairs in the DB searching for a match --
             query = "Select username, password from user";
             rs = st.executeQuery(query);
            
@@ -98,9 +87,10 @@ class LoginController
                     JOptionPane.showMessageDialog(null, "Oops, Couldn't connect to the server. Error 001");
             }
         
-        //PROMT ALERT message for invalid login 
+        // -- PROMT ALERT message for invalid login --
         JOptionPane.showMessageDialog(null, "Invalid username/password combination. Please try again");
         System.out.println("Login unsucesfull");
+        
         loginSuccess = false;
         return false; //if no matching pair found or connection failed don't allow login.
     }
@@ -132,18 +122,14 @@ class LoginController
             rs.first();
             DBuser_type = rs.getString("user_type");
            
-            if (username.equalsIgnoreCase("test") && password.equals("test"))
-            {
-                    return 1;
-            }
-            
+            // -- ADMIN --
             if (DBuser_type.equals("1"))
             {
                 System.out.println("Admin Account");
                 return 1;
-                //load admin view
             }
             
+            // -- STAFF --
             if (DBuser_type.equals("2"))
             {
                 System.out.println("Staff Account");
@@ -157,18 +143,5 @@ class LoginController
             System.out.println("Validation error. Could not find user_type. ERROR 003");}
         return 0;
     } 
-    
-    public void actionPerformed(ActionEvent e) //Function to handle events from the GUI's
-    {
-        String cmd = e.getActionCommand();
-        System.out.println(cmd);
-        if (cmd.equals("Submit Button"))
-        {
-            System.out.println("Submit pressed!");
-           
-        }
-    }
-    
-    
 }
 

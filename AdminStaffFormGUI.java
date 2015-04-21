@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 
 /**
  * @author ChrisGoodman, James Johnson, Dennis Smith, Ben Boaz, Sherry Wang
@@ -78,21 +79,21 @@ public class AdminStaffFormGUI extends JFrame
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	setLayout(new FlowLayout());
         
-        // Initialize Panels
+        // -- Initialize Panels --
         mainPanel   = new JPanel();
         imagePanel  = new JPanel();
         formPanel   = new JPanel();
         coursePanel = new JPanel();
         buttonPanel = new JPanel();
         
-        // Set Panel Layouts
+        // -- Set Panel Layouts --
         formPanel.setLayout(new GridLayout(6,2));
         coursePanel.setLayout(new GridLayout(3,2));
         buttonPanel.setLayout(new GridLayout(1,2));
         mainPanel.setLayout(new BorderLayout());
                 
         
-        //put the image up
+        // -- put the image up --
         image1 = new ImageIcon(getClass().getResource("/images/staffBlackboard.jpg")); //E-attendance banner 
         label1 = new JLabel(image1);
         imagePanel.add(label1);
@@ -146,15 +147,19 @@ public class AdminStaffFormGUI extends JFrame
         //Then the list will be generated from the array of courses by name.
         ArrayList<ArrayList<String>> courses = new ArrayList<ArrayList<String>>();
         adminCourseController acc = new adminCourseController();
-        courses = acc.getCourses();
+        courses = acc.runReturn();
+        
+        String[] c = new String[100];
+        for (int x = 0; x < courses.size(); x++)
+        {
+            c[x] = courses.get(x).toString();
+        }
         
         
         String sampleCourseData[] = {"apple", "orange", "banana", "pear", "pumpkin", "bears","lions", "tigers", "oMY!"};
         courseListLabel = new JLabel("Courses Taught: ");
         
-
-        
-        courseList      = new JList(sampleCourseData);
+        courseList      = new JList(c);
         listScrollPane = new JScrollPane(courseList);
         coursePanel.add(courseListLabel);
         coursePanel.add(listScrollPane);
@@ -165,8 +170,6 @@ public class AdminStaffFormGUI extends JFrame
         cancel  = new JButton("Cancel");
         coursePanel.add(submit);
         coursePanel.add(cancel);
-        
-        
         
         // -- ADD ALL PANELS --
         mainPanel.add(imagePanel, BorderLayout.NORTH);
@@ -194,7 +197,7 @@ public class AdminStaffFormGUI extends JFrame
                 
                Object[] c = new Object[10]; //Assuming a staff could teach no more then 10 classes
                c = courseList.getSelectedValuesList().toArray(); //c holds list of selected courses
-             
+               // -- NEEDS TO BE FIXED, WAITING FOR COURSES RETURN TO BE FIXED --
                 System.out.println(id + name + position + email + username + password);
                 
                 try
@@ -220,19 +223,9 @@ public class AdminStaffFormGUI extends JFrame
                 System.out.println("Cancel Form Button pressed");   
                 dispose();
             }
-        });   
-                
-                     
+        });         
         this.setVisible(true);
-
     }
-    
-    
-    public static void main(String args[])
-    {
-        AdminStaffFormGUI asfg = new AdminStaffFormGUI();
-    }
-               
-    
+   
 }
 

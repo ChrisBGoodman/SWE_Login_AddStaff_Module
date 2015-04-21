@@ -36,6 +36,7 @@ public class adminHomePanels extends JFrame
 	protected JTabbedPane tabPane;
         
         private testPanel p;
+        private logoutGUI logout;
         
     adminHomePanels()
     {
@@ -54,10 +55,13 @@ public class adminHomePanels extends JFrame
                 addStaffPanel.setLayout(new BorderLayout());
                 addStaffPanel.setPreferredSize(new Dimension(640,440));
 		
-		JPanel panel4 = new JPanel();
                 
                 // -- A Test Panel --
                 p = new testPanel();
+                
+                // -- Logout Panel --
+                logout = new logoutGUI();
+                
                 
                 // -- Panel for admin add course view --
                 // -- As of now all of the below is required to gather the data from a hardwired excel source
@@ -80,7 +84,7 @@ public class adminHomePanels extends JFrame
                 tabbedPane.addTab("Courses", acg);
                 tabbedPane.addTab("Staff", asg);
                 tabbedPane.addTab("Students", p);
-                tabbedPane.addTab("Logout", panel4);
+                tabbedPane.addTab("Logout", logout);
                 add(tabbedPane);
                 
                 

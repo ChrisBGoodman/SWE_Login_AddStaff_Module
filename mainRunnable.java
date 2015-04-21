@@ -22,6 +22,7 @@ public class mainRunnable
         
         LoginGUI lg = new LoginGUI();
         
+        //scanGUI sc = new scanGUI();
         //testPanel p = new testPanel();
         //adminHomePanels a = new adminHomePanels();
         // -- Z --
@@ -34,10 +35,6 @@ public class mainRunnable
         //staffCourseController scc = new staffCourseController();
         //scc.getStudentList();
         //scc.getCourseStudentsID(111);
-
-        
-        
-        
         
         //add_staff_GUI staffGUI = new add_staff_GUI(); //Use this to view our GUI's
 
@@ -52,7 +49,7 @@ public class mainRunnable
             //asc.uploadStaffData("aa534", "te4st", "test", "test", "tes6t", "test", "2"); 
                         
             //asc.getStaffList();
-            //asc.uploadStaffDataExcel();   //work in progress will be finished soon
+            //asc.uploadStaffDataExcel();   
             //asc.displayStaffList();
         
     }

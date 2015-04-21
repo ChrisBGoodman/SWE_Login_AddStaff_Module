@@ -39,6 +39,17 @@ public class adminCourseController implements ActionListener {
 
     }
     
+    public ArrayList<ArrayList<String>> runReturn() {
+        excelReader = new readFromExcel();
+        list = new ArrayList<ArrayList<String>>();
+        list = excelReader.getData();
+        //courseGUI = new adminCourseGUI(excelReader.getData());
+        /* Create and display the form */
+        //courseGUI.setVisible(false);
+        return list;
+
+    }
+    
     public ArrayList<ArrayList<String>> getCourses()
     {
         return list;

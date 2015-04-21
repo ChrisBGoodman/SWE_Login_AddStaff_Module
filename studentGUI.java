@@ -34,9 +34,6 @@ import javax.swing.JTable;
  */
 public class studentGUI extends JPanel
 {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ImageIcon image1;
 	
@@ -47,7 +44,6 @@ public class studentGUI extends JPanel
         private JPanel mainPanel;
         private JPanel studentPanel;
 	
-        private JFrame frame;
 	protected JTabbedPane tabPane;
         
         private JTable studentTable;
@@ -58,17 +54,13 @@ public class studentGUI extends JPanel
         
         private staffCourseController scc;
 
-        
-
         private ArrayList<Student> allStudents; 
         private ArrayList<Student> courseStudents;
         private ArrayList<String>  IDList;
         
-       
-	
-        
-        studentGUI(String courseCode) throws SQLException 
-            {
+        // -- Used to dynamically create the Staff view -- 
+        studentGUI(String courseCode, String courseSeq) throws SQLException 
+            {                
 		this.setSize(500, 550);
 		setLayout(new FlowLayout());
                 
@@ -78,10 +70,12 @@ public class studentGUI extends JPanel
                 mainPanel.setLayout(new BorderLayout());
                 mainPanel.setPreferredSize(new Dimension(640,440));
 		
+                // -- Panel to hold the table of students --
                 studentPanel = new JPanel();
                 studentPanel.setPreferredSize(new Dimension(600, 400));
 
         
+                // -- Table options --
                 studentPanel.setLayout(new GridBagLayout());
                 GridBagConstraints c = new GridBagConstraints();
                 c.gridx = 0;
@@ -99,7 +93,8 @@ public class studentGUI extends JPanel
                 allStudents = scc.getStudentList();
                 
                 // -- Find all students in a course by code --
-                IDList = scc.getCourseStudentsID(courseCode);
+                IDList = scc.getCourseStudentsID(courseSeq);
+                
                 courseStudents = new ArrayList<Student>();
                 
                 // -- Add students found into a new list to be displayed --
@@ -130,18 +125,19 @@ public class studentGUI extends JPanel
         
                 // -- Add Buttons & Listeners --
                 attendanceJB = new JButton("Take Attendance");
-                attendanceJB.setActionCommand("take attendance" + courseCode);
+                attendanceJB.setActionCommand("take attendance" + courseCode + courseSeq);
                 attendanceJB.addActionListener(new ActionListener()     //Action for submit button
                 {
                     @Override
+                    //--If attendance button clicked -- Load on the WebCam --
                     public void actionPerformed(ActionEvent e)
                     {
                         String cmd = e.getActionCommand();
-                        if (cmd.equals("take attendance" + courseCode))
+                        if (cmd.equals("take attendance" + courseCode + courseSeq))
                         {
                             System.out.println("take attendance clicked" + courseCode);
                             staffCourseController scc = new staffCourseController();
-                            scc.loadScanGUI(courseCode);
+                            scc.loadScanGUI(courseCode, courseSeq, courseStudents);
                         }
                     }
                 });
@@ -169,7 +165,7 @@ public class studentGUI extends JPanel
                     y++;
                     studentTable.setValueAt(courseStudents.get(x-1).getID(), x, y);
                     y++;
-                    studentTable.setValueAt(courseStudents.get(x-1).getTimeIn(), x, y); 
+                    studentTable.setValueAt(courseStudents.get(x-1).getEmail(), x, y); 
                 }
         }      
 } //End class

@@ -22,26 +22,25 @@ import javax.swing.JTable;
 
 /**
  *
- * @author ChrisGoodman
+ * @author Christian Bryce Goodman
  */
 public class staffHomePanels extends JFrame
 {
-    
     private ImageIcon image1;
 	
-        private JLabel label1;
+    private JLabel label1;
 	
-        private JPanel panel;
-	private JTable table;
-        private JPanel addStaffPanel;
-	
-        private JFrame frame;
-	protected JTabbedPane tabPane;
-        
-        private testPanel p;
-        
-        
-        private String[] staffCoursesTaught;
+    private JPanel panel;
+    private JPanel addStaffPanel;
+
+    private JTable table;
+    
+    protected JTabbedPane tabPane;
+               
+    private String[] staffCoursesTaught;
+    private String[] staffCoursesTaughtSeq;
+    private String   startTime;
+
         
     staffHomePanels(String username) throws SQLException
     {
@@ -57,9 +56,6 @@ public class staffHomePanels extends JFrame
 	add(label1);
 	
                
-        // -- A Test Panel --
-        p = new testPanel();
-        
         // -- Panels Four each course
         JPanel course1 = new JPanel();
         JPanel course2 = new JPanel();
@@ -67,57 +63,67 @@ public class staffHomePanels extends JFrame
         JPanel course4 = new JPanel();
                 
         
-        
-               
-                
+        // -- Initialize Panels to be used --        
         add_staff_GUI asg = new add_staff_GUI();
         adminCourseController acc = new adminCourseController();
+        logoutGUI logout = new logoutGUI();
         
-        
-        
-        
+        // -- Initialize Staff Controller and get staff courses --
         staffCourseController scc = new staffCourseController();
-        scc.setUsername(username);
-        staffCoursesTaught = scc.getStaffCoursesTaught(username);
+        staffCoursesTaught    = scc.getStaffCoursesTaught(username);
+        staffCoursesTaughtSeq = scc.getStaffCoursesTaughtSEQ(username);
+
           
         // -- Makes the tabs --
 	JTabbedPane tabbedPane = new JTabbedPane();
         
-        if(!staffCoursesTaught[0].isEmpty())
+        // -- ADD COURSES --
+        // -- Dynamically create GUI's for each course with the studentGUI --
+        // -- Tabs are displayed as "Course Code - Start Hour"
+        
+        if(staffCoursesTaught[0] != null)
         {   
-            studentGUI sg = new studentGUI(staffCoursesTaught[0]);
-            tabbedPane.addTab(staffCoursesTaught[0], sg);
+            studentGUI sg = new studentGUI(staffCoursesTaught[0], staffCoursesTaughtSeq[0]);
+            startTime = scc.getStaffCoursesTaughtTimeHour(staffCoursesTaughtSeq[0]);
+            tabbedPane.addTab(staffCoursesTaught[0] + "-" + startTime, sg);
         }
         
-        if(!staffCoursesTaught[1].isEmpty())
+        if(staffCoursesTaught[1] != null)
         {   
-            studentGUI sg = new studentGUI(staffCoursesTaught[1]);
-            tabbedPane.addTab(staffCoursesTaught[1], sg);
+            studentGUI sg = new studentGUI(staffCoursesTaught[1], staffCoursesTaughtSeq[1]);            
+            startTime = scc.getStaffCoursesTaughtTimeHour(staffCoursesTaughtSeq[1]);
+            tabbedPane.addTab(staffCoursesTaught[1] + "-" + startTime, sg);
         }
         
+        if(staffCoursesTaught[2] != null)
+        {   
+            studentGUI sg = new studentGUI(staffCoursesTaught[2], staffCoursesTaughtSeq[2]);
+            startTime = scc.getStaffCoursesTaughtTimeHour(staffCoursesTaughtSeq[2]);
+            tabbedPane.addTab(staffCoursesTaught[2] + "-" + startTime, sg);
+        }
         
+        if(staffCoursesTaught[3] != null)
+        {   
+            studentGUI sg = new studentGUI(staffCoursesTaught[3], staffCoursesTaughtSeq[3]);
+            startTime = scc.getStaffCoursesTaughtTimeHour(staffCoursesTaughtSeq[3]);
+            tabbedPane.addTab(staffCoursesTaught[3] + "-" + startTime, sg);
+        }
         
-        
-        
-        
-        
-        
-       
-        tabbedPane.addTab("Staff course 4", p);
-        add(tabbedPane);
+        if(staffCoursesTaught[4] != null)
+        {   
+            studentGUI sg = new studentGUI(staffCoursesTaught[4], staffCoursesTaughtSeq[4]);
+            startTime = scc.getStaffCoursesTaughtTimeHour(staffCoursesTaughtSeq[4]);
+            tabbedPane.addTab(staffCoursesTaught[4] + "-" + startTime, sg);
+        }
+             
+        // -- Adding logout pane --
+        tabbedPane.addTab("Logout", logout);
 
-                
-                
-               
-                
-                
+        add(tabbedPane);
+        
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-    
-    
-    
-    
     
     
 }

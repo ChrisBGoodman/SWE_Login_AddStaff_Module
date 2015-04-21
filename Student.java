@@ -5,6 +5,8 @@
  */
 package SWE_Login_AddStaff_Module;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author ChrisGoodman
@@ -16,7 +18,9 @@ public class Student
     private String student_id;
     private String email;
     private String image_url;
-    private int time_in;
+    private int time_in_hour;
+    private int time_in_min;
+    private String status;
     
     Student(String fname, String lname, String id, String email, String url)
     {
@@ -25,18 +29,44 @@ public class Student
         this.student_id     = id;
         this.email          = email;
         this.image_url      = url;
-        this.time_in        = 0;
+        this.time_in_hour   = 0;
+        this.time_in_hour   = 0;
+        this.status         = "Absent";
+    }
+    
+    Student()
+    {
         
     }
     
-    public void setTimeIn(int x)
+    public void setTimeInHour(int x)
     {
-        this.time_in = x;
+        this.time_in_hour = x;
     }
     
-    public int getTimeIn()
+    public void setStatus(String x)
     {
-        return this.time_in;
+        this.status = x;
+    }
+    
+    public String getStatus()
+    {
+        return this.status;
+    }
+    
+    public int getTimeInHour()
+    {
+        return this.time_in_hour;
+    }
+    
+    public void setTimeInMin(int x)
+    {
+        this.time_in_min = x;
+    }
+    
+    public int getTimeInMin()
+    {
+        return this.time_in_min;
     }
     
     public String getFName()
@@ -62,6 +92,20 @@ public class Student
     public String getID()
     {
         return this.student_id;
+    }
+    
+    public int findIDInList(String IDToSearch, ArrayList<Student> list )
+    {
+        for ( int x = 0; x < list.size(); x++)
+        {
+            if (list.get(x).student_id.equals(IDToSearch))
+            {
+                System.out.println("Found at " + x);
+                return x;
+            }
+        }
+        
+        return -1;
     }
 }
 

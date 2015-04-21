@@ -42,20 +42,25 @@ public class AdminStaffController implements ActionListener
     private AdminStaffFormGUI staffFormGUI;
     boolean staffExist;                         //tells if a staff member is present in arrayList already
 
-
+    //-- Calls to load on the StaffList View GUI --
     public void loadStaffGUI()
     {
         staffGUI = new add_staff_GUI();
     }
     
-    /****************************************************************************
-     * When called will request the staffFormGUI class to load on
-     */
+    //-- Calls to load on StaffFormGUI --
     public void loadStaffFormGUI()
     {
         staffFormGUI = new AdminStaffFormGUI();
     }
-    //---------------------------------------------------------------------------
+
+    /**
+     * Ran on button click: Used to open file explorer and select a .xlsx file and read in data from the file.
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws InvalidFormatException
+     * @throws SQLException 
+     */
     public void uploadStaffDataExcel() throws FileNotFoundException, IOException, InvalidFormatException, SQLException
     {
         String filePath;
@@ -63,25 +68,26 @@ public class AdminStaffController implements ActionListener
         File selectedFile = null;
         FileInputStream fis;
         
-        //Open the System File Explorer
+        //-- Open the System File Explorer --
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.showOpenDialog(null);
      
-        //Read in a selected file from user selection
+        //-- Read in a selected file from user selection --
         Scanner sc = new Scanner(fc.getSelectedFile());
         selectedFile = fc.getSelectedFile();
         fis = new FileInputStream(selectedFile);
         
-        //Check extionsion type of the file to make sure it is excel
+        //-- Check extionsion type of the file to make sure it is excel --
         filePath = selectedFile.getAbsolutePath();
         extensionType = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
         System.out.println("Extension Type"+ extensionType);
         
-        if (extensionType.equals("xlsx")) //If not an excel file, break out of the function with alert message 
+        //-- If not an excel xlsx file, break out of the function with alert message -- 
+        if (extensionType.equals("xlsx")) 
             JOptionPane.showMessageDialog(null, "Uploading");
         
-            else 
+        else 
         {
             JOptionPane.showMessageDialog(null, "Error 004. Invalid File Type. Please use an excel sheet using a .xlsx extension");
             return;
@@ -95,8 +101,8 @@ public class AdminStaffController implements ActionListener
         conn = DriverManager.getConnection("jdbc:mysql://" + host
                                 + "/" + database + "?"
                                 + "user=" + user
-                                + "&password=" + pass);   
-        
+                                + "&password=" + pass); 
+       
         // -- Create connection to the workbook from the file selected --        
         XSSFWorkbook wb = new XSSFWorkbook(selectedFile);
         XSSFSheet ws = wb.getSheetAt(0);
@@ -114,9 +120,6 @@ public class AdminStaffController implements ActionListener
         ArrayList<String> courseList = new ArrayList<String>(); 
         int staff_seq = 0;
 
-
-        
-        
         row = ws.getRow(1); //Get Row 1 skipping row 0 containing the headers of each column
         while (row != null)
         {
@@ -130,6 +133,7 @@ public class AdminStaffController implements ActionListener
             // --Checking for courses of a staff member--
             courseList.clear(); //clear the list 
             
+            // -- Add courses if row is not empty --
             if(row.getCell(6) != null){           
                 course1 = row.getCell(6).toString();
                 courseList.add(course1);
@@ -152,7 +156,8 @@ public class AdminStaffController implements ActionListener
                 course4 = row.getCell(9).toString();
                 courseList.add(course4);
             }
-
+            
+           
             staffExist = false;
             for(int x = 0; x < staffList.size(); x++) //loop thru arraylist checking for matching staff ID
             {
@@ -162,7 +167,8 @@ public class AdminStaffController implements ActionListener
                 }
             }
             
-            if (staffExist == false) //If false, insert into list and DB 
+            //-- If false, insert into list and DB --
+            if (staffExist == false) 
             {            
                 staffList.add(new Staff(staff_ID,staff_name,position,email));
                 st = conn.createStatement();
@@ -180,6 +186,7 @@ public class AdminStaffController implements ActionListener
                     + password + "','"
                    + user_type+ "')");
                 
+                // -- For the list size, insert into DB -- Creates unique id for each course while doing so --
                 for(int x = 0; x < courseList.size(); x++)
                 {
                     staff_seq++;
@@ -191,8 +198,8 @@ public class AdminStaffController implements ActionListener
                         System.out.println("inseerting course");
                         st = conn.createStatement();
                         st.executeUpdate("INSERT into staff_courses " + "VALUES('"
-                            + staff_seq      + "','"
-                            + id                      + "','"
+                            + staff_seq                       + "','"
+                            + id                              + "','"
                             + courseList.get(x).toString()    + "','"
                             + "0"                             + "')");    
                     }
@@ -216,7 +223,8 @@ public class AdminStaffController implements ActionListener
             String password, String user_type) throws SQLException
     {
         String staff_seq = null, course_code_ug = null, course_code_g = null;
-        user_type = "2";
+        user_type = "2"; // 2 for staff
+        
         Connection conn = null;
         ResultSet rs = null;
         Statement st = null;
@@ -226,7 +234,7 @@ public class AdminStaffController implements ActionListener
                                 + "user=" + user
                                 + "&password=" + pass);   
         
-        //Make sure given ID is not already present in the list of staff we have
+        //-- Make sure given ID is not already present in the list of staff we have --
         staffExist = false;
         ArrayList<Staff> list = new ArrayList<Staff>();
         list = getStaffList();
@@ -258,8 +266,10 @@ public class AdminStaffController implements ActionListener
                 + password + "','"
                 + user_type+ "')");
             
+            // -- NOT WORING NEED COURSES LIST TO BE FIXED --
+            /*
             // --= INSERT into staff_courses 
-            /* //Find the course data associated with the name passed to it from function.
+             //Find the course data associated with the name passed to it from function.
             st = conn.createStatement();
             st.executeUpdate("INSERT into staff_courses " + "VALUES('"
                     + staff_seq + "','"
@@ -268,8 +278,8 @@ public class AdminStaffController implements ActionListener
                     + course_code_g  + "')");
             */
             
+            
             JOptionPane.showMessageDialog(null, "Inserted");
-
         }
         
         if(staffExist == true)
@@ -332,15 +342,9 @@ public class AdminStaffController implements ActionListener
         }
     }
     
-    public void findCourses(String c1, String c2, String c3, String c4)
-    {
-        
-        
-    }
-    
-    
+    // -- Function to handle events from the GUI's --
     @Override
-    public void actionPerformed(ActionEvent e) //Function to handle events from the GUI's
+    public void actionPerformed(ActionEvent e) 
     {
         String cmd = e.getActionCommand();
         System.out.println(cmd);
@@ -350,6 +354,7 @@ public class AdminStaffController implements ActionListener
             loadStaffFormGUI();
         }
         
+        // -- If Upload button clicked -- Try uploadStaffDataExcel --
         if (cmd.equals("Upload Staff"))
         {
             System.out.println("Upload Staff Button Clicked");
@@ -366,11 +371,7 @@ public class AdminStaffController implements ActionListener
             {
                 Logger.getLogger(AdminStaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
     }
-    
-    
-    
 }
 

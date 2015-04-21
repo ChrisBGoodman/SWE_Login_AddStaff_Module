@@ -51,11 +51,10 @@ class LoginGUI extends JFrame
     
     LoginGUI()  //constructor called when wanting to load on loginGUI
     {
-        //JFrame options
+        //-- JFrame options --
         super("Login");                             
         this.setSize(600, 450);	
-        //setLayout(new BorderLayout());
-        BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS); // top to bottom
+        BoxLayout boxLayout = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
         setLayout(boxLayout);
         
         //Login Fields optiions
@@ -70,8 +69,9 @@ class LoginGUI extends JFrame
         JButton submitJB = new JButton("Submit");
         JButton cancelJB = new JButton("Cancel");
         submitJB.setActionCommand("Submit Button");
-        submitJB.addActionListener(new ActionListener()     //Action for submit button
+        submitJB.addActionListener(new ActionListener()   
         {
+            // -- Action for Submit Button -- Try Login and Validate --
             @Override
             public void actionPerformed(ActionEvent e)
             {                               
@@ -84,12 +84,13 @@ class LoginGUI extends JFrame
                 int staff = 2;
                 
                 if (lc.loginSuccess == true && user_type == admin)//If succesfull close login GUI 
-                {                                               //and open up Admin View 
+                {                                                 //and open up Admin View 
                     dispose();
                     adminHomePanels ahp = new adminHomePanels();
                 }
                 
-                if(lc.loginSuccess == true && user_type == staff)
+                // -- If Staff account found, dynamicaly create the staff View of courses -- 
+                if(lc.loginSuccess == true && user_type == staff) 
                 {
                     dispose();
                     try
@@ -97,13 +98,12 @@ class LoginGUI extends JFrame
                         staffHomePanels shp = new staffHomePanels(userName);
                     } catch (SQLException ex)
                     {Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);}
-                }
-                
-                
+                } 
             }
         });
         
-        cancelJB.addActionListener(new ActionListener()     //Action for submit button
+        // -- Action for Cancel button -- Close The system --
+        cancelJB.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -113,27 +113,23 @@ class LoginGUI extends JFrame
             }
         });
         
-       
-
-         //Login Panel options
+         //-- Login Panel options --
         loginPanel = new JPanel();  
         loginPanel.setMaximumSize(new Dimension(1280,100));
         loginPanel.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         loginPanel.setLayout(new GridLayout(3,2));
         
-        //Info Panel & Label Options
+        //-- Info Panel & Label Options --
         infoLabel = new JLabel("E-Attedance System - Developed by Paul Young's Software Engineering students.");
         infoPanel = new JPanel();
         infoPanel.setMaximumSize(new Dimension(1280,100));
         
-        
-        //Icon options
+        //-- Icon options --
         lockImage = new ImageIcon(getClass().getResource("/images/lock.jpg"));   
         iconLabel = new JLabel(lockImage);
         add(iconLabel, BorderLayout.NORTH);
         
-   
-        //Add Panels to Frame    
+        //-- Add Panels to Frame --
         loginPanel.add(usernameLabel);
         loginPanel.add(usernameJTF);
         loginPanel.add(passwordLabel);
@@ -141,7 +137,7 @@ class LoginGUI extends JFrame
         loginPanel.add(submitJB);
         loginPanel.add(cancelJB);
         
-        JLabel test = new JLabel("Developed 2015. For support email test@uca.edu");
+        JLabel test = new JLabel("Developed 2015. For support email pYoung@uca.edu");
         
         infoPanel.add(infoLabel);
         infoPanel.add(test);
